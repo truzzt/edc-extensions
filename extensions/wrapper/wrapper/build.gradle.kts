@@ -61,6 +61,11 @@ tasks.withType<org.gradle.jvm.tasks.Jar> {
     }
 }
 
+openApiGenerate {
+    generatorName.set("java")
+    inputSpec.set(openapiFile)
+}
+
 publishing {
     publications {
         create<MavenPublication>(project.name) {

@@ -24,7 +24,7 @@ public class SwaggerService {
         this.context = context;
     }
 
-    public String getSwagger() {
+    public String getOpenApi() {
         return "";
     }
 }

@@ -29,7 +29,8 @@ public class SwaggerController {
     }
 
     @GET
+    @Path("/openapi")
     public String getSwagger() {
-        return swaggerService.getSwagger();
+        return swaggerService.getOpenApi();
     }
 }

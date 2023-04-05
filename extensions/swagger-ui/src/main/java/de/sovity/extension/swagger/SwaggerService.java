@@ -29,6 +29,10 @@ public class SwaggerService {
 
     public Response getOpenApi() {
         var file = new File("edc-api-wrapper.yaml");
-        return Response.ok(file).header("Content-Disposition", "attachment; filename=\"" + file.getName() + "\"").build();
+        if (!file.exists()) {
+            return Response.status(Response.Status.NOT_FOUND).build();
+        } else {
+            return Response.ok(file).header("Content-Disposition", "attachment; filename=\"" + file.getName() + "\"").build();
+        }
     }
 }

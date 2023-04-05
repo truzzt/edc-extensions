@@ -13,12 +13,19 @@
  */
 package de.sovity.extension.swagger;
 
+import org.eclipse.edc.connector.api.management.configuration.ManagementApiConfiguration;
+import org.eclipse.edc.runtime.metamodel.annotation.Inject;
 import org.eclipse.edc.spi.system.ServiceExtension;
 import org.eclipse.edc.spi.system.ServiceExtensionContext;
+import org.eclipse.edc.web.spi.WebService;
 
 public class SwaggerExtension implements ServiceExtension {
 
     public static final String SWAGGER_EXTENSION = "SwaggerExtension";
+    @Inject
+    private ManagementApiConfiguration config;
+    @Inject
+    private WebService webService;
 
     @Override
     public String name() {
@@ -27,6 +34,9 @@ public class SwaggerExtension implements ServiceExtension {
 
     @Override
     public void initialize(ServiceExtensionContext context) {
+        var swaggerService = new SwaggerService(context);
+        var controller = new SwaggerController(swaggerService);
+        webService.registerResource(config.getContextAlias(), controller);
     }
 
     @Override

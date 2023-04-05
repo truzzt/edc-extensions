@@ -66,6 +66,8 @@ dependencies {
     if (project.hasProperty("azure-vault")) {
         implementation("${edcGroup}:azure-vault:${edcVersion}")
     }
+
+    implementation(project(":extensions:swagger-ui"))
 }
 
 application {

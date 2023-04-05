@@ -14,7 +14,10 @@
 
 package de.sovity.extension.swagger;
 
+import jakarta.ws.rs.core.Response;
 import org.eclipse.edc.spi.system.ServiceExtensionContext;
+
+import java.io.File;
 
 public class SwaggerService {
 
@@ -24,7 +27,8 @@ public class SwaggerService {
         this.context = context;
     }
 
-    public String getOpenApi() {
-        return "";
+    public Response getOpenApi() {
+        var file = new File("edc-api-wrapper.yaml");
+        return Response.ok(file).header("Content-Disposition", "attachment; filename=\"" + file.getName() + "\"").build();
     }
 }

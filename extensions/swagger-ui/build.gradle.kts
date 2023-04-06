@@ -20,6 +20,11 @@ dependencies {
 
     implementation("jakarta.ws.rs:jakarta.ws.rs-api:3.1.0")
     implementation("jakarta.validation:jakarta.validation-api:3.0.2")
+
+    // Swagger dependencies
+    implementation("io.swagger.core.v3:swagger-jaxrs2:2.2.6")
+    implementation("io.swagger.core.v3:swagger-core:2.2.6")
+    implementation("org.webjars:swagger-ui:3.51.1")
 }
 
 publishing {

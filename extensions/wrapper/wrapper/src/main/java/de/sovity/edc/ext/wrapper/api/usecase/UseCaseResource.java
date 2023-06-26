@@ -24,15 +24,9 @@ import de.sovity.edc.ext.wrapper.api.usecase.services.OfferingService;
 import de.sovity.edc.ext.wrapper.api.usecase.services.SupportedPolicyApiService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
-import jakarta.ws.rs.Consumes;
-import jakarta.ws.rs.GET;
-import jakarta.ws.rs.POST;
-import jakarta.ws.rs.Path;
-import jakarta.ws.rs.PathParam;
-import jakarta.ws.rs.Produces;
+import jakarta.ws.rs.*;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
-import jakarta.ws.rs.core.Response.Status;
 import lombok.RequiredArgsConstructor;
 
 import java.util.List;
@@ -73,6 +67,15 @@ public class UseCaseResource {
         return Response.status(Response.Status.NO_CONTENT).build();
     }
 
+    @POST
+    @Path("update-offer")
+    @Consumes(MediaType.APPLICATION_JSON)
+    @Operation(description = "Updates an offer")
+    public Response updateOfferEndpoint(CreateOfferingDto dto) {
+        offeringService.update(dto);
+        return Response.status(Response.Status.NO_CONTENT).build();
+    }
+
     /**
      * Creates a new data consumption.
      *
@@ -87,7 +90,7 @@ public class UseCaseResource {
     public Response consume(ConsumptionInputDto dto) {
         var consumptionId = consumptionService.startConsumptionProcess(dto);
         var response = Map.of("id", consumptionId);
-        return Response.status(Status.CREATED).entity(response).build();
+        return Response.status(Response.Status.CREATED).entity(response).build();
     }
 
     /**
@@ -103,10 +106,10 @@ public class UseCaseResource {
     public Response getConsumption(@PathParam("id") String consumptionId) {
         var consumptionDto = consumptionService.getConsumptionProcess(consumptionId);
         if (consumptionDto == null) {
-            return Response.status(Status.NOT_FOUND).build();
+            return Response.status(Response.Status.NOT_FOUND).build();
         }
 
-        return Response.status(Status.OK).entity(consumptionDto).build();
+        return Response.status(Response.Status.OK).entity(consumptionDto).build();
     }
 
     @GET

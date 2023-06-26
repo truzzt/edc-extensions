@@ -62,9 +62,25 @@ class OfferingResourceTest {
                 .all();
     }
 
-    ValidatableResponse whenJsonPropertyMissing(String property) {
+    ValidatableResponse whenJsonPropertyMissingCreate(String property) {
         contractOffer.remove(property);
         return whenCreateOfferingEndpoint(contractOffer.toString());
+    }
+
+    ValidatableResponse whenUpdateOfferingEndpoint(String body) {
+        return givenManagementEndpoint()
+                .when()
+                .contentType(ContentType.JSON)
+                .body(body)
+                .post("/wrapper/use-case-api/update-offer")
+                .then()
+                .log()
+                .all();
+    }
+
+    ValidatableResponse whenJsonPropertyMissingUpdate(String property) {
+        contractOffer.remove(property);
+        return whenUpdateOfferingEndpoint(contractOffer.toString());
     }
 
     @Test
@@ -76,7 +92,7 @@ class OfferingResourceTest {
 
     @Test
     void shouldNotCreateOfferMissingAssetEntry() {
-        whenJsonPropertyMissing(ASSET_ENTRY_KEY)
+        whenJsonPropertyMissingCreate(ASSET_ENTRY_KEY)
                 .assertThat()
                 .statusCode(400)
                 .contentType(ContentType.JSON)
@@ -85,7 +101,7 @@ class OfferingResourceTest {
 
     @Test
     void shouldNotCreateOfferMissingPolicyDefinitionRequest() {
-        whenJsonPropertyMissing(POLICY_DEFINITION_REQUEST)
+        whenJsonPropertyMissingCreate(POLICY_DEFINITION_REQUEST)
                 .assertThat()
                 .statusCode(400)
                 .contentType(ContentType.JSON)
@@ -94,7 +110,7 @@ class OfferingResourceTest {
 
     @Test
     void shouldNotCreateOfferMissingContractDefinitionRequest() {
-        whenJsonPropertyMissing(CONTRACT_DEFINITION_REQUEST)
+        whenJsonPropertyMissingCreate(CONTRACT_DEFINITION_REQUEST)
                 .assertThat()
                 .statusCode(400)
                 .contentType(ContentType.JSON)
@@ -115,6 +131,34 @@ class OfferingResourceTest {
         whenCreateOfferingEndpoint("asdf")
                 .assertThat()
                 .statusCode(400);
+    }
+
+    @Test
+    void shouldUpdateOfferCompleteDto() {
+        whenUpdateOfferingEndpoint(contractOfferValid.toString())
+                .assertThat()
+                .statusCode(204);
+    }
+
+    @Test
+    void shouldUpdateOfferMissingAssetEntry() {
+        whenJsonPropertyMissingUpdate(ASSET_ENTRY_KEY)
+                .assertThat()
+                .statusCode(204);
+    }
+
+    @Test
+    void shouldUpdateOfferMissingPolicyDefinitionRequest() {
+        whenJsonPropertyMissingUpdate(POLICY_DEFINITION_REQUEST)
+                .assertThat()
+                .statusCode(204);
+    }
+
+    @Test
+    void shouldUpdateOfferMissingContractDefinitionRequest() {
+        whenJsonPropertyMissingUpdate(CONTRACT_DEFINITION_REQUEST)
+                .assertThat()
+                .statusCode(204);
     }
 
 }

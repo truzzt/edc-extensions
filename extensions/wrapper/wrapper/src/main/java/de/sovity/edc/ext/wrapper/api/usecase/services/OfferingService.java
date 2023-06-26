@@ -5,9 +5,6 @@ import de.sovity.edc.ext.wrapper.api.usecase.model.AssetEntryDto;
 import de.sovity.edc.ext.wrapper.api.usecase.model.ContractDefinitionRequestDto;
 import de.sovity.edc.ext.wrapper.api.usecase.model.CreateOfferingDto;
 import de.sovity.edc.ext.wrapper.api.usecase.model.PolicyDefinitionRequestDto;
-import java.util.List;
-import java.util.Map;
-
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.eclipse.edc.connector.contract.spi.offer.store.ContractDefinitionStore;
@@ -20,6 +17,9 @@ import org.eclipse.edc.spi.query.Criterion;
 import org.eclipse.edc.spi.types.domain.DataAddress;
 import org.eclipse.edc.spi.types.domain.asset.Asset;
 import org.eclipse.edc.web.spi.exception.InvalidRequestException;
+
+import java.util.List;
+import java.util.Map;
 
 /**
  * Service for all the features of the wrapper regarding offers.
@@ -55,6 +55,70 @@ public class OfferingService {
         } catch (Exception e) {
             log.error("Error transforming DTOs: " + e.getMessage(), e);
             throw new InvalidRequestException(e.getMessage());
+        }
+    }
+
+    /**
+     * ToDo
+     *
+     * @param dto
+     */
+    public void update(CreateOfferingDto dto) {
+        var assetEntry = dto.getAssetEntry();
+        var policyDefinitionRequest = dto.getPolicyDefinitionRequest();
+        var contractDefinitionRequest = dto.getContractDefinitionRequest();
+        if (assetEntry != null) {
+            updateAsset(assetEntry);
+        }
+        if (policyDefinitionRequest != null) {
+            updatePolicy(dto.getPolicyDefinitionRequest());
+        }
+        if (contractDefinitionRequest != null) {
+            updateContractDefinition(contractDefinitionRequest);
+        }
+    }
+
+    private void updateAsset(AssetEntryDto dto) {
+        var byId = assetIndex.findById(dto.getId());
+        if (byId != null) {
+            assetIndex.updateAsset(transformAsset(dto));
+        } else {
+            assetIndex.create(transformAsset(dto));
+        }
+    }
+
+    private void updatePolicy(PolicyDefinitionRequestDto dto) {
+        var byId = policyDefinitionStore.findById(dto.getId());
+        if (byId != null) {
+            if (dto.getPolicy() != null) {
+                policyDefinitionStore.update(transformPolicy(dto));
+            }
+        } else {
+            policyDefinitionStore.create(transformPolicy(dto));
+        }
+    }
+
+    private void updateContractDefinition(ContractDefinitionRequestDto dto) {
+        var byId = contractDefinitionStore.findById(dto.getId());
+        if (byId != null) {
+//            var contractDefinition = ContractDefinition.Builder.newInstance()
+//                    .accessPolicyId(
+//                            (dto.getAccessPolicyId() != null) ? dto.getAccessPolicyId()
+//                                    : byId.getAccessPolicyId()
+//                    )
+//                    .contractPolicyId(
+//                            (dto.getContractPolicyId() != null) ? dto.getContractPolicyId()
+//                                    : byId.getContractPolicyId()
+//                    )
+//                    .assetsSelector(
+//                            (dto.getAssetsSelector() != null) ? criterionDtosToCriteria(
+//                                    dto.getAssetsSelector()) : byId.getAssetsSelector()
+//                    )
+//                    .build();
+//            contractDefinitionStore.update(contractDefinition);
+            contractDefinitionStore.update(transformContractDefinition(dto));
+        } else {
+            contractDefinitionStore.save(transformContractDefinition(dto));
         }
     }
 

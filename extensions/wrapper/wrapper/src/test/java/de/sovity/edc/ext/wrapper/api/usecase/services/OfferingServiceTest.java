@@ -180,6 +180,7 @@ class OfferingServiceTest {
                 .id("asset-id")
                 .assetProperties(Map.of())
                 .dataAddressProperties(Map.of("type", "type"))
+                .privateAssetProperties(Map.of("private", "private"))
                 .build();
     }
 

@@ -14,12 +14,17 @@ import org.eclipse.edc.connector.contract.spi.offer.store.ContractDefinitionStor
 import org.eclipse.edc.connector.contract.spi.types.offer.ContractDefinition;
 import org.eclipse.edc.connector.policy.spi.PolicyDefinition;
 import org.eclipse.edc.connector.policy.spi.store.PolicyDefinitionStore;
+import org.eclipse.edc.policy.model.Policy;
+import org.eclipse.edc.spi.EdcException;
 import org.eclipse.edc.spi.asset.AssetIndex;
 import org.eclipse.edc.spi.persistence.EdcPersistenceException;
 import org.eclipse.edc.spi.query.Criterion;
 import org.eclipse.edc.spi.types.domain.DataAddress;
 import org.eclipse.edc.spi.types.domain.asset.Asset;
+import org.eclipse.edc.transform.spi.TypeTransformerRegistry;
 import org.eclipse.edc.web.spi.exception.InvalidRequestException;
+
+import static java.lang.String.format;
 
 /**
  * Service for all the features of the wrapper regarding offers.
@@ -33,7 +38,7 @@ public class OfferingService {
     private final AssetIndex assetIndex;
     private final PolicyDefinitionStore policyDefinitionStore;
     private final ContractDefinitionStore contractDefinitionStore;
-    private final PolicyMappingService policyMappingService;
+    private final TypeTransformerRegistry transformerRegistry;
 
     /**
      * Creates the asset, policy and contract definition in the connector. First, transforms the
@@ -80,16 +85,12 @@ public class OfferingService {
     }
 
     private PolicyDefinition transformPolicy(PolicyDefinitionRequestDto dto) {
-        try {
-            var policy = policyMappingService.policyDtoToPolicy(dto.getPolicy());
-            return PolicyDefinition.Builder.newInstance()
-                    .id(dto.getId())
-                    .policy(policy)
-                    .build();
-        } catch (IllegalArgumentException e) {
-            throw new InvalidRequestException(e.getMessage());
-        }
-
+        var policy = transformerRegistry.transform(dto.getPolicy(), Policy.class)
+                .orElseThrow(e -> new EdcException(format("Failed to transform PolicyDto: %s", e.getFailureDetail())));
+        return PolicyDefinition.Builder.newInstance()
+                .id(dto.getId())
+                .policy(policy)
+                .build();
     }
 
     private ContractDefinition transformContractDefinition(ContractDefinitionRequestDto dto) {

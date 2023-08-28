@@ -38,11 +38,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.eq;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.times;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.verifyNoInteractions;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 
 class ConsumptionServiceTest {
 
@@ -60,14 +56,13 @@ class ConsumptionServiceTest {
     private final ContractNegotiationStore negotiationStore = mock(ContractNegotiationStore.class);
     private final TransferProcessStore transferProcessStore = mock(TransferProcessStore.class);
     private final TypeTransformerRegistry transformerRegistry = mock(TypeTransformerRegistry.class);
-    private final PolicyMappingService policyMappingService = mock(PolicyMappingService.class);
 
     private ConsumptionService consumptionService;
 
     @BeforeEach
     void setUp() {
         consumptionService = new ConsumptionService(negotiationService, transferProcessService,
-                negotiationStore, transferProcessStore, transformerRegistry, policyMappingService);
+                negotiationStore, transferProcessStore, transformerRegistry);
     }
 
     @Test
@@ -78,7 +73,7 @@ class ConsumptionServiceTest {
                 .thenReturn(negotiation());
 
         var policy = policy();
-        when(policyMappingService.policyDtoToPolicy(any())).thenReturn(policy);
+        when(transformerRegistry.transform(any(), any())).thenReturn(Result.success(policy));
 
         var input = ConsumptionInputDto.builder()
                 .connectorId(counterPartyId)

@@ -12,9 +12,12 @@ import org.eclipse.edc.connector.policy.spi.store.PolicyDefinitionStore;
 import org.eclipse.edc.policy.model.Action;
 import org.eclipse.edc.policy.model.Permission;
 import org.eclipse.edc.policy.model.Policy;
+import org.eclipse.edc.spi.EdcException;
 import org.eclipse.edc.spi.asset.AssetIndex;
 import org.eclipse.edc.spi.persistence.EdcPersistenceException;
+import org.eclipse.edc.spi.result.Result;
 import org.eclipse.edc.spi.types.domain.asset.Asset;
+import org.eclipse.edc.transform.spi.TypeTransformerRegistry;
 import org.eclipse.edc.web.spi.exception.InvalidRequestException;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -33,7 +36,7 @@ class OfferingServiceTest {
     private final PolicyDefinitionStore policyDefinitionStore = mock(PolicyDefinitionStore.class);
     private final ContractDefinitionStore contractDefinitionStore = mock(
             ContractDefinitionStore.class);
-    private final PolicyMappingService policyMappingService = mock(PolicyMappingService.class);
+    private final TypeTransformerRegistry transformerRegistry = mock(TypeTransformerRegistry.class);
 
     private OfferingService offeringService;
 
@@ -48,7 +51,7 @@ class OfferingServiceTest {
     @BeforeEach
     void setUp() {
         this.offeringService = new OfferingService(assetIndex, policyDefinitionStore,
-                contractDefinitionStore, policyMappingService);
+                contractDefinitionStore, transformerRegistry);
 
         this.assetEntryDto = assetDto();
         this.asset = asset();
@@ -59,8 +62,8 @@ class OfferingServiceTest {
         this.createOfferingDto = new CreateOfferingDto(assetEntryDto, policyDefinitionDto,
                 contractDefinitionDto);
 
-        when(policyMappingService.policyDtoToPolicy(policyDefinitionDto.getPolicy())).thenReturn(
-                policy);
+        when(transformerRegistry.transform(any(PolicyDto.class), eq(Policy.class)))
+                .thenReturn(Result.success(policy));
     }
 
     @Test
@@ -107,14 +110,14 @@ class OfferingServiceTest {
     }
 
     @Test
-    void create_mappingPolicyFails_throwException() {
+    void create_transformingPolicyFails_throwException() {
         // arrange
-        doThrow(IllegalArgumentException.class).when(policyMappingService)
-                .policyDtoToPolicy(policyDefinitionDto.getPolicy());
+        when(transformerRegistry.transform(policyDefinitionDto.getPolicy(), Policy.class))
+                .thenReturn(Result.failure("error"));
 
         // act && assert
         assertThatThrownBy(() -> offeringService.create(createOfferingDto))
-                .isInstanceOf(RuntimeException.class);
+                .isInstanceOf(EdcException.class);
 
         verifyNoInteractions(assetIndex);
         verifyNoInteractions(policyDefinitionStore);

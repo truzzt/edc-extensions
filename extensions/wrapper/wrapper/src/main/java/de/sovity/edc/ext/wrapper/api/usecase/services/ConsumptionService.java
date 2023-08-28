@@ -11,6 +11,7 @@ import org.eclipse.edc.connector.spi.contractnegotiation.ContractNegotiationServ
 import org.eclipse.edc.connector.spi.transferprocess.TransferProcessService;
 import org.eclipse.edc.connector.transfer.spi.store.TransferProcessStore;
 import org.eclipse.edc.connector.transfer.spi.types.TransferRequest;
+import org.eclipse.edc.policy.model.Policy;
 import org.eclipse.edc.spi.EdcException;
 import org.eclipse.edc.spi.result.Result;
 import org.eclipse.edc.spi.types.domain.DataAddress;
@@ -45,7 +46,6 @@ public class ConsumptionService {
     private final ContractNegotiationStore contractNegotiationStore;
     private final TransferProcessStore transferProcessStore;
     private final TypeTransformerRegistry transformerRegistry;
-    private final PolicyMappingService policyMappingService;
 
     /**
      * Starts a consumption process for the asset specified in the input. Validates the input and
@@ -62,8 +62,9 @@ public class ConsumptionService {
 
         validateInput(consumptionInputDto);
 
-        var policy = policyMappingService.policyDtoToPolicy(consumptionInputDto.getPolicy())
-                .withTarget(consumptionInputDto.getAssetId());
+        var policy = transformerRegistry.transform(consumptionInputDto.getPolicy(), Policy.class)
+                .map(content -> content.withTarget(consumptionInputDto.getAssetId()))
+                .orElseThrow(e -> new EdcException(format("Failed to transform PolicyDto: %s", e.getFailureDetail())));
 
         var contractOffer = ContractOffer.Builder.newInstance()
                 .id(consumptionInputDto.getOfferId())

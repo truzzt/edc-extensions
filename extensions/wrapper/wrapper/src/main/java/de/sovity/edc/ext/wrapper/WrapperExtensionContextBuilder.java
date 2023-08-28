@@ -162,9 +162,8 @@ public class WrapperExtensionContextBuilder {
                 contractAgreementService
         );
         var supportedPolicyApiService = new SupportedPolicyApiService(policyEngine);
-        var policyMappingService = new PolicyMappingService();
         var offeringService = new OfferingService(assetIndex, policyDefinitionStore,
-                contractDefinitionStore, policyMappingService);
+                contractDefinitionStore, transformerRegistry);
 
         transformerRegistry.register(new PermissionToPermissionDtoTransformer());
         transformerRegistry.register(new PolicyToPolicyDtoTransformer());
@@ -173,7 +172,7 @@ public class WrapperExtensionContextBuilder {
         transformerRegistry.register(new ContractNegotiationToContractNegotiationOutputDtoTransformer());
         transformerRegistry.register(new TransferProcessToTransferProcessOutputDtoTransformer());
         var consumptionService = new ConsumptionService(contractNegotiationService, transferProcessService,
-                contractNegotiationStore, transferProcessStore, transformerRegistry, policyMappingService);
+                contractNegotiationStore, transferProcessStore, transformerRegistry);
 
         negotiationObservable.registerListener(new ContractNegotiationConsumptionListener(consumptionService));
 

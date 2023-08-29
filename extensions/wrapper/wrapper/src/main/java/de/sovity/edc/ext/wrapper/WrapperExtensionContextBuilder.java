@@ -167,6 +167,8 @@ public class WrapperExtensionContextBuilder {
 
         transformerRegistry.register(new PermissionToPermissionDtoTransformer());
         transformerRegistry.register(new PolicyToPolicyDtoTransformer());
+        transformerRegistry.register(new PermissionDtoToPermissionTransformer());
+        transformerRegistry.register(new PolicyDtoToPolicyTransformer());
         transformerRegistry.register(new ContractAgreementToContractAgreementDtoTransformer());
         transformerRegistry.register(new DataRequestToDataRequestDtoTransformer());
         transformerRegistry.register(new ContractNegotiationToContractNegotiationOutputDtoTransformer());

@@ -21,6 +21,8 @@ dependencies {
 
     implementation("com.squareup.okhttp3:okhttp:${okHttpVersion}")
     implementation("org.json:json:${jsonVersion}")
+    implementation("javax.validation:validation-api:2.0.1.Final")
+
 
     testImplementation("org.assertj:assertj-core:${assertj}")
     testImplementation("org.junit.jupiter:junit-jupiter-api:${jupiterVersion}")
@@ -29,6 +31,7 @@ dependencies {
     testImplementation("org.junit.jupiter:junit-jupiter-params:${jupiterVersion}")
     testRuntimeOnly("org.junit.jupiter:junit-jupiter-engine:${jupiterVersion}")
 }
+
 
 tasks.getByName<Test>("test") {
     useJUnitPlatform()

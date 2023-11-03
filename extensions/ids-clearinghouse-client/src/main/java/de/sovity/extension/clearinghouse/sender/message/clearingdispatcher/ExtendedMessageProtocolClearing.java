@@ -13,12 +13,11 @@
  */
 package de.sovity.extension.clearinghouse.sender.message.clearingdispatcher;
 
-import org.eclipse.edc.protocol.ids.spi.types.MessageProtocol;
-
 public final class ExtendedMessageProtocolClearing {
 
     private static final String EXTENDED_SUFFIX = "-extended-clearing";
-    public static final String IDS_EXTENDED_PROTOCOL_CLEARING = String.format("%s%s", MessageProtocol.IDS_MULTIPART, EXTENDED_SUFFIX);
+    public static final String IDS_MULTIPART = "ids-multipart";
+    public static final String IDS_EXTENDED_PROTOCOL_CLEARING = String.format("%s%s", IDS_MULTIPART, EXTENDED_SUFFIX);
 
     private ExtendedMessageProtocolClearing() {
     }

@@ -80,12 +80,11 @@ public class LogMessageSender implements MultipartSenderDelegate<LogMessage, Str
     private String buildContractAgreementPayload(ContractAgreement contractAgreement) {
         var jo = new JSONObject();
         jo.put("AgreementId", contractAgreement.getId());
-        jo.put("AssetId", contractAgreement.getAssetId());
-        jo.put("ContractStartDate", contractAgreement.getContractStartDate());
-        jo.put("ContractEndDate", contractAgreement.getContractEndDate());
+        jo.put("ProviderId", contractAgreement.getProviderId());
+        jo.put("ConsumerId", contractAgreement.getConsumerId());
         jo.put("ContractSigningDate", contractAgreement.getContractSigningDate());
-        jo.put("ConsumerAgentId", contractAgreement.getConsumerAgentId());
-        jo.put("ProviderAgentId", contractAgreement.getProviderAgentId());
+        jo.put("Policy", contractAgreement.getPolicy());
+        jo.put("AssetId", contractAgreement.getAssetId());
         return jo.toString();
     }
 

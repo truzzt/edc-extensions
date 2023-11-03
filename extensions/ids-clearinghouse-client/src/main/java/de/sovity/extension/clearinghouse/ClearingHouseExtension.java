@@ -117,16 +117,12 @@ public class ClearingHouseExtension implements ServiceExtension {
         registerSerializerClearingHouseMessages(context);
         registerClearingHouseMessageSenders(context);
 
-        var connectorServiceSettings = new ConnectorServiceSettings(context, context.getMonitor());
-
-        registerEventSubscriber(context, connectorServiceSettings);
+        registerEventSubscriber(context);
     }
 
-    private void registerEventSubscriber(ServiceExtensionContext context,
-                                         ConnectorServiceSettings connectorServiceSettings) {
+    private void registerEventSubscriber(ServiceExtensionContext context) {
         var eventSubscriber = new IdsClearingHouseServiceImpl(
                 dispatcherRegistry,
-                connectorServiceSettings,
                 hostname,
                 clearingHouseLogUrl,
                 contractNegotiationStore,

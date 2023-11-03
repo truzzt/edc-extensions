@@ -15,7 +15,7 @@ public record LogMessage(URL clearingHouseLogUrl,
     }
 
     @Override
-    public String getConnectorAddress() {
+    public String getCounterPartyAddress() {
         return clearingHouseLogUrl.toString();
     }
 }

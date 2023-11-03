@@ -14,17 +14,16 @@
 package de.sovity.extension.clearinghouse.service;
 
 import de.sovity.extension.clearinghouse.sender.message.LogMessage;
+import org.eclipse.edc.connector.contract.spi.event.contractnegotiation.ContractNegotiationFinalized;
 import org.eclipse.edc.connector.contract.spi.negotiation.store.ContractNegotiationStore;
 import org.eclipse.edc.connector.contract.spi.types.agreement.ContractAgreement;
+import org.eclipse.edc.connector.transfer.spi.event.TransferProcessTerminated;
 import org.eclipse.edc.connector.transfer.spi.store.TransferProcessStore;
 import org.eclipse.edc.connector.transfer.spi.types.TransferProcess;
-import org.eclipse.edc.protocol.ids.service.ConnectorServiceSettings;
 import org.eclipse.edc.spi.EdcException;
 import org.eclipse.edc.spi.event.Event;
 import org.eclipse.edc.spi.event.EventEnvelope;
 import org.eclipse.edc.spi.event.EventSubscriber;
-import org.eclipse.edc.spi.event.contractnegotiation.ContractNegotiationConfirmed;
-import org.eclipse.edc.spi.event.transferprocess.TransferProcessCompleted;
 import org.eclipse.edc.spi.message.RemoteMessageDispatcherRegistry;
 import org.eclipse.edc.spi.monitor.Monitor;
 import org.eclipse.edc.spi.system.Hostname;
@@ -39,7 +38,6 @@ public class IdsClearingHouseServiceImpl implements IdsClearingHouseService, Eve
     private static final String CONTEXT_CLEARINGHOUSE = "ClearingHouse";
 
     private final RemoteMessageDispatcherRegistry dispatcherRegistry;
-    private final ConnectorServiceSettings connectorServiceSettings;
     private final URI connectorBaseUrl;
     private final URL clearingHouseLogUrl;
     private final ContractNegotiationStore contractNegotiationStore;
@@ -48,14 +46,12 @@ public class IdsClearingHouseServiceImpl implements IdsClearingHouseService, Eve
 
     public IdsClearingHouseServiceImpl(
             RemoteMessageDispatcherRegistry dispatcherRegistry,
-            ConnectorServiceSettings connectorServiceSettings,
             Hostname hostname,
             URL clearingHouseLogUrl,
             ContractNegotiationStore contractNegotiationStore,
             TransferProcessStore transferProcessStore,
             Monitor monitor) {
         this.dispatcherRegistry = dispatcherRegistry;
-        this.connectorServiceSettings = connectorServiceSettings;
         this.clearingHouseLogUrl = clearingHouseLogUrl;
         this.contractNegotiationStore = contractNegotiationStore;
         this.transferProcessStore = transferProcessStore;
@@ -84,15 +80,15 @@ public class IdsClearingHouseServiceImpl implements IdsClearingHouseService, Eve
     }
 
     @Override
-    public void on(EventEnvelope<?> event) {
+    public <E extends Event> void on(EventEnvelope<E> event) {
         try {
-            if (event instanceof ContractNegotiationConfirmed contractNegotiationConfirmed) {
-                var contractAgreement = resolveContractAgreement(contractNegotiationConfirmed);
+            if (event.getPayload() instanceof ContractNegotiationFinalized contractNegotiationFinalized) {
+                var contractAgreement = resolveContractAgreement(contractNegotiationFinalized);
                 var pid = UUID.nameUUIDFromBytes(contractAgreement.getId().getBytes()).toString();
                 var extendedUrl = new URL(clearingHouseLogUrl + "/" + pid);
                 logContractAgreement(contractAgreement, extendedUrl);
-            } else if (event instanceof TransferProcessCompleted transferProcessCompleted) {
-                var transferProcess = resolveTransferProcess(transferProcessCompleted);
+            } else if (event.getPayload() instanceof TransferProcessTerminated transferProcessTerminated) {
+                var transferProcess = resolveTransferProcess(transferProcessTerminated);
                 var pid = UUID.nameUUIDFromBytes(transferProcess.getId().getBytes()).toString();
                 var extendedUrl = new URL(clearingHouseLogUrl + "/" + pid);
                 logTransferProcess(transferProcess, extendedUrl);
@@ -102,17 +98,15 @@ public class IdsClearingHouseServiceImpl implements IdsClearingHouseService, Eve
         }
     }
 
-    private ContractAgreement resolveContractAgreement(ContractNegotiationConfirmed contractNegotiationConfirmed) {
-        var eventPayload = contractNegotiationConfirmed.getPayload();
-        var contractNegotiationId = eventPayload.getContractNegotiationId();
-        var contractNegotiation = contractNegotiationStore.find(contractNegotiationId);
-        return contractNegotiation.getContractAgreement();
+    private ContractAgreement resolveContractAgreement(ContractNegotiationFinalized contractNegotiationFinalized) {
+        var contractNegotiationId = contractNegotiationFinalized.getContractNegotiationId();
+        var contractNegotiation = contractNegotiationStore.findById(contractNegotiationId);
+        return contractNegotiationFinalized.getContractAgreement();
     }
 
-    private TransferProcess resolveTransferProcess(TransferProcessCompleted transferProcessCompleted) {
-        var eventPayload = transferProcessCompleted.getPayload();
-        var transferProcessId = eventPayload.getTransferProcessId();
-        return transferProcessStore.find(transferProcessId);
+    private TransferProcess resolveTransferProcess(TransferProcessTerminated trransferProcessTerminated) {
+        var transferProcessId = trransferProcessTerminated.getTransferProcessId();
+        return transferProcessStore.findById(transferProcessId);
     }
 
     private URI getConnectorBaseUrl(Hostname hostname) throws URISyntaxException {

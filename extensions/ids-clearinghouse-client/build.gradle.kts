@@ -22,7 +22,9 @@ dependencies {
     implementation("com.squareup.okhttp3:okhttp:${okHttpVersion}")
     implementation("org.json:json:${jsonVersion}")
     implementation("javax.validation:validation-api:2.0.1.Final")
-
+    implementation("jakarta.validation:jakarta.validation-api:3.0.2")
+    implementation("jakarta.ws.rs:jakarta.ws.rs-api:3.1.0")
+    implementation("org.glassfish.jersey.media:jersey-media-multipart:3.1.3")
 
     testImplementation("org.assertj:assertj-core:${assertj}")
     testImplementation("org.junit.jupiter:junit-jupiter-api:${jupiterVersion}")

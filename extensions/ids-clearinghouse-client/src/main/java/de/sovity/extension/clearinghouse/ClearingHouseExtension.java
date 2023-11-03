@@ -13,21 +13,19 @@
  */
 package de.sovity.extension.clearinghouse;
 
-import de.fraunhofer.iais.eis.Artifact;
 import de.fraunhofer.iais.eis.LogMessage;
 import de.sovity.extension.clearinghouse.sender.LogMessageSender;
 import de.sovity.extension.clearinghouse.sender.message.clearingdispatcher.IdsMultipartClearingRemoteMessageDispatcher;
 import de.sovity.extension.clearinghouse.serializer.MultiContextJsonLdSerializer;
 import de.sovity.extension.clearinghouse.service.IdsClearingHouseService;
 import de.sovity.extension.clearinghouse.service.IdsClearingHouseServiceImpl;
+import org.eclipse.edc.connector.contract.spi.event.contractnegotiation.ContractNegotiationFinalized;
 import org.eclipse.edc.connector.contract.spi.negotiation.store.ContractNegotiationStore;
+import org.eclipse.edc.connector.transfer.spi.event.TransferProcessTerminated;
 import org.eclipse.edc.connector.transfer.spi.store.TransferProcessStore;
-import org.eclipse.edc.protocol.ids.api.configuration.IdsApiConfiguration;
 import org.eclipse.edc.protocol.ids.api.multipart.dispatcher.sender.IdsMultipartSender;
 import org.eclipse.edc.protocol.ids.jsonld.JsonLd;
-import org.eclipse.edc.protocol.ids.service.ConnectorServiceSettings;
 import org.eclipse.edc.protocol.ids.spi.service.DynamicAttributeTokenService;
-import org.eclipse.edc.protocol.ids.spi.transform.IdsTransformerRegistry;
 import org.eclipse.edc.runtime.metamodel.annotation.Inject;
 import org.eclipse.edc.runtime.metamodel.annotation.Setting;
 import org.eclipse.edc.spi.EdcException;
@@ -60,17 +58,15 @@ public class ClearingHouseExtension implements ServiceExtension {
     @Setting
     private static final String CLEARINGHOUSE_CLIENT_EXTENSION_ENABLED = "clearinghouse.client.extension.enabled";
 
+
     @Inject
-    private IdsApiConfiguration idsApiConfiguration;
+    private TypeManager typeManager;
 
     @Inject
     private RemoteMessageDispatcherRegistry dispatcherRegistry;
 
     @Inject
     private IdentityService identityService;
-
-    @Inject
-    private IdsTransformerRegistry transformerRegistry;
 
     @Inject
     private ContractNegotiationStore contractNegotiationStore;
@@ -94,7 +90,6 @@ public class ClearingHouseExtension implements ServiceExtension {
 
     private URL clearingHouseLogUrl;
     private Monitor monitor;
-
 
     @Override
     public String name() {
@@ -129,7 +124,8 @@ public class ClearingHouseExtension implements ServiceExtension {
                 transferProcessStore,
                 monitor);
 
-        eventRouter.registerSync(eventSubscriber); //asynchronous dispatch - registerSync for synchronous dispatch
+        eventRouter.registerSync(ContractNegotiationFinalized.class, eventSubscriber);
+        eventRouter.registerSync(TransferProcessTerminated.class, eventSubscriber);
         context.registerService(IdsClearingHouseService.class, eventSubscriber);
     }
 
@@ -150,14 +146,11 @@ public class ClearingHouseExtension implements ServiceExtension {
     }
 
     private void registerSerializerClearingHouseMessages(ServiceExtensionContext context) {
-        var typeManager = context.getTypeManager();
         typeManager.registerContext(TYPE_MANAGER_SERIALIZER_KEY, JsonLd.getObjectMapper());
         registerCommonTypes(typeManager);
     }
 
     private void registerCommonTypes(TypeManager typeManager) {
-        typeManager.registerSerializer(TYPE_MANAGER_SERIALIZER_KEY, Artifact.class,
-                new MultiContextJsonLdSerializer<>(Artifact.class, CONTEXT_MAP));
         typeManager.registerSerializer(TYPE_MANAGER_SERIALIZER_KEY, LogMessage.class,
                 new MultiContextJsonLdSerializer<>(LogMessage.class, CONTEXT_MAP));
     }
@@ -165,7 +158,6 @@ public class ClearingHouseExtension implements ServiceExtension {
     private void registerClearingHouseMessageSenders(ServiceExtensionContext context) {
         var httpClient = context.getService(EdcHttpClient.class);
         var monitor = context.getMonitor();
-        var typeManager = context.getTypeManager();
         var objectMapper = typeManager.getMapper(TYPE_MANAGER_SERIALIZER_KEY);
 
         var logMessageSender = new LogMessageSender();

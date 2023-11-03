@@ -69,14 +69,14 @@ public class IdsClearingHouseServiceImpl implements IdsClearingHouseService, Eve
     public void logContractAgreement(ContractAgreement contractAgreement, URL clearingHouseLogUrl) {
         monitor.info("Logging contract agreement to ClearingHouse");
         var logMessage = new LogMessage(clearingHouseLogUrl, connectorBaseUrl, contractAgreement);
-        dispatcherRegistry.send(Object.class, logMessage, () -> CONTEXT_CLEARINGHOUSE);
+        dispatcherRegistry.dispatch(Object.class, logMessage);
     }
 
     @Override
     public void logTransferProcess(TransferProcess transferProcess, URL clearingHouseLogUrl) {
         monitor.info("Logging transferprocess to ClearingHouse");
         var logMessage = new LogMessage(clearingHouseLogUrl, connectorBaseUrl, transferProcess);
-        dispatcherRegistry.send(Object.class, logMessage, () -> CONTEXT_CLEARINGHOUSE);
+        dispatcherRegistry.dispatch(Object.class, logMessage);
     }
 
     @Override

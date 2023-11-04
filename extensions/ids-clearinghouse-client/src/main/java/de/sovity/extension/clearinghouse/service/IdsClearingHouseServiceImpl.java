@@ -35,8 +35,6 @@ import java.util.UUID;
 
 public class IdsClearingHouseServiceImpl implements IdsClearingHouseService, EventSubscriber {
 
-    private static final String CONTEXT_CLEARINGHOUSE = "ClearingHouse";
-
     private final RemoteMessageDispatcherRegistry dispatcherRegistry;
     private final URI connectorBaseUrl;
     private final URL clearingHouseLogUrl;
@@ -101,7 +99,7 @@ public class IdsClearingHouseServiceImpl implements IdsClearingHouseService, Eve
     private ContractAgreement resolveContractAgreement(ContractNegotiationFinalized contractNegotiationFinalized) {
         var contractNegotiationId = contractNegotiationFinalized.getContractNegotiationId();
         var contractNegotiation = contractNegotiationStore.findById(contractNegotiationId);
-        return contractNegotiationFinalized.getContractAgreement();
+        return contractNegotiation.getContractAgreement();
     }
 
     private TransferProcess resolveTransferProcess(TransferProcessTerminated trransferProcessTerminated) {

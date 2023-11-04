@@ -13,13 +13,12 @@
  *
  */
 
-package org.eclipse.edc.protocol.ids.util;
+package org.eclipse.edc.protocol.ids.api.multipart.dispatcher.sender.util;
 
 import javax.xml.datatype.DatatypeConfigurationException;
 import javax.xml.datatype.DatatypeFactory;
 import javax.xml.datatype.XMLGregorianCalendar;
 import java.time.ZonedDateTime;
-import java.util.Date;
 import java.util.GregorianCalendar;
 
 public final class CalendarUtil {
@@ -31,18 +30,5 @@ public final class CalendarUtil {
         } catch (DatatypeConfigurationException e) {
             throw new RuntimeException(e);
         }
-    }
-
-    /**
-     * Creates an XMLGregorianCalendar from an epoch seconds timestamp.
-     *
-     * @param timestamp the timestamp.
-     * @return XMLGregorianCalendar representation of the timestamp.
-     * @throws DatatypeConfigurationException if the timestamp cannot be parsed.
-     */
-    public static XMLGregorianCalendar gregorianFromEpochSeconds(long timestamp) throws DatatypeConfigurationException {
-        var gregCal = new GregorianCalendar();
-        gregCal.setTime(new Date(timestamp * 1000));
-        return DatatypeFactory.newInstance().newXMLGregorianCalendar(gregCal);
     }
 }

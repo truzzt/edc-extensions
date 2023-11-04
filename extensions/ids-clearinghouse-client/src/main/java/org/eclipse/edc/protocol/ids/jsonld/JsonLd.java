@@ -23,9 +23,6 @@ import org.eclipse.edc.protocol.ids.jsonld.type.calendar.XmlGregorianCalendarMod
 
 import java.text.SimpleDateFormat;
 
-/**
- * Provides a customized {@link ObjectMapper}.
- */
 public final class JsonLd {
 
     public static ObjectMapper getObjectMapper() {

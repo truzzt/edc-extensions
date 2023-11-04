@@ -24,7 +24,7 @@ import org.eclipse.edc.protocol.ids.api.multipart.dispatcher.sender.MultipartSen
 import org.eclipse.edc.protocol.ids.api.multipart.dispatcher.sender.response.IdsMultipartParts;
 import org.eclipse.edc.protocol.ids.api.multipart.dispatcher.sender.response.MultipartResponse;
 import org.eclipse.edc.protocol.ids.spi.domain.IdsConstants;
-import org.eclipse.edc.protocol.ids.util.CalendarUtil;
+import org.eclipse.edc.protocol.ids.api.multipart.dispatcher.sender.util.CalendarUtil;
 import org.eclipse.edc.spi.EdcException;
 import org.json.JSONObject;
 
@@ -39,8 +39,7 @@ public class LogMessageSender implements MultipartSenderDelegate<LogMessage, Str
     }
 
     @Override
-    public Message buildMessageHeader(LogMessage logMessage,
-                                      DynamicAttributeToken token) throws Exception {
+    public Message buildMessageHeader(LogMessage logMessage, DynamicAttributeToken token) {
         return new LogMessageBuilder()
                 ._modelVersion_(IdsConstants.INFORMATION_MODEL_VERSION)
                 ._issued_(CalendarUtil.gregorianNow())
@@ -51,7 +50,7 @@ public class LogMessageSender implements MultipartSenderDelegate<LogMessage, Str
     }
 
     @Override
-    public String buildMessagePayload(LogMessage logMessage) throws Exception {
+    public String buildMessagePayload(LogMessage logMessage) {
         if (logMessage.eventToLog() instanceof ContractAgreement contractAgreement) {
             return buildContractAgreementPayload(contractAgreement);
         } else if (logMessage.eventToLog() instanceof TransferProcess transferProcess) {

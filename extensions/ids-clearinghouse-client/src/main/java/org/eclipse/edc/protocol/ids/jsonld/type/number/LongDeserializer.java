@@ -24,19 +24,16 @@ import com.fasterxml.jackson.databind.node.TextNode;
 
 import java.io.IOException;
 
-/**
- * Custom Jackson deserializer for objects of type Float.
- */
-public class FloatDeserializer extends StdDeserializer<Float> {
+public class LongDeserializer extends StdDeserializer<Long> {
 
-    public FloatDeserializer() {
-        super(Float.class);
+    public LongDeserializer() {
+        super(Long.class);
     }
 
     @Override
-    public Float deserialize(JsonParser parser, DeserializationContext context) throws IOException {
+    public Long deserialize(JsonParser parser, DeserializationContext context) throws IOException {
         try {
-            return Float.valueOf(getValue(parser.readValueAsTree(), parser));
+            return Long.valueOf(getValue(parser.readValueAsTree(), parser));
         } catch (NumberFormatException e) {
             return null;
         }
@@ -51,7 +48,7 @@ public class FloatDeserializer extends StdDeserializer<Float> {
             return getValue(node.get("@value"), parser);
         }
 
-        throw new JsonParseException(parser, "Could not read Float");
+        throw new JsonParseException(parser, "Could not read Long");
     }
 
 }

@@ -17,9 +17,6 @@ package org.eclipse.edc.protocol.ids.jsonld;
 import com.fasterxml.jackson.databind.module.SimpleModule;
 import org.eclipse.edc.protocol.ids.jsonld.type.UriDeserializer;
 import org.eclipse.edc.protocol.ids.jsonld.type.UriSerializer;
-import org.eclipse.edc.protocol.ids.jsonld.type.number.BigDecimalDeserializer;
-import org.eclipse.edc.protocol.ids.jsonld.type.number.BigIntegerDeserializer;
-import org.eclipse.edc.protocol.ids.jsonld.type.number.FloatDeserializer;
 import org.eclipse.edc.protocol.ids.jsonld.type.number.LongDeserializer;
 import org.eclipse.edc.protocol.ids.jsonld.type.number.NumSerializer;
 
@@ -27,9 +24,6 @@ import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.net.URI;
 
-/**
- * Custom Jackson module that provides all customized type de/serializers.
- */
 public class JsonLdModule extends SimpleModule {
 
     public JsonLdModule() {
@@ -43,9 +37,6 @@ public class JsonLdModule extends SimpleModule {
         addSerializer(Float.class, new NumSerializer());
 
         addDeserializer(URI.class, new UriDeserializer());
-        addDeserializer(BigInteger.class, new BigIntegerDeserializer());
-        addDeserializer(BigDecimal.class, new BigDecimalDeserializer());
         addDeserializer(Long.class, new LongDeserializer());
-        addDeserializer(Float.class, new FloatDeserializer());
     }
 }

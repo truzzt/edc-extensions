@@ -26,9 +26,6 @@ import javax.xml.datatype.DatatypeConfigurationException;
 import javax.xml.datatype.DatatypeFactory;
 import javax.xml.datatype.XMLGregorianCalendar;
 
-/**
- * Custom Jackson deserializer for objects of type XMLGregorianCalendar.
- */
 public class XmlGregorianCalendarDeserializer extends StdDeserializer<XMLGregorianCalendar> {
     private static final long serialVersionUID = 1L;
 

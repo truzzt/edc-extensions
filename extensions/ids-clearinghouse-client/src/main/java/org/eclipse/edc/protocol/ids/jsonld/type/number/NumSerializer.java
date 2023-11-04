@@ -22,9 +22,6 @@ import java.io.IOException;
 import java.math.BigDecimal;
 import java.math.BigInteger;
 
-/**
- * Custom Jackson serializer for objects of type Number.
- */
 public class NumSerializer extends StdSerializer<Number> {
 
     public NumSerializer() {

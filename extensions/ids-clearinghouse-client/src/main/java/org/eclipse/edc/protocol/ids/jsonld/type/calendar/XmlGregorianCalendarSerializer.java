@@ -22,9 +22,6 @@ import java.io.IOException;
 import java.text.SimpleDateFormat;
 import javax.xml.datatype.XMLGregorianCalendar;
 
-/**
- * Custom Jackson serializer for objects of type XMLGregorianCalendar.
- */
 public class XmlGregorianCalendarSerializer extends StdSerializer<XMLGregorianCalendar> {
 
     public XmlGregorianCalendarSerializer() {
@@ -42,5 +39,4 @@ public class XmlGregorianCalendarSerializer extends StdSerializer<XMLGregorianCa
         generator.writeStringField("@type", "http://www.w3.org/2001/XMLSchema#dateTimeStamp");
         generator.writeEndObject();
     }
-
 }

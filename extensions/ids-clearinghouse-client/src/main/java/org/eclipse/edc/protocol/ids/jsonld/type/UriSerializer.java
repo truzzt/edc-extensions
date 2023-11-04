@@ -21,9 +21,6 @@ import com.fasterxml.jackson.databind.ser.std.StdSerializer;
 import java.io.IOException;
 import java.net.URI;
 
-/**
- * Custom Jackson serializer for objects of type URI.
- */
 public class UriSerializer extends StdSerializer<URI> {
 
     public UriSerializer() {

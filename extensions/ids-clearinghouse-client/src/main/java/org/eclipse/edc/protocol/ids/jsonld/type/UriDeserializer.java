@@ -25,9 +25,6 @@ import com.fasterxml.jackson.databind.node.TextNode;
 import java.io.IOException;
 import java.net.URI;
 
-/**
- * Custom Jackson deserializer for objects of type URI.
- */
 public class UriDeserializer extends StdDeserializer<URI> {
 
     public UriDeserializer() {

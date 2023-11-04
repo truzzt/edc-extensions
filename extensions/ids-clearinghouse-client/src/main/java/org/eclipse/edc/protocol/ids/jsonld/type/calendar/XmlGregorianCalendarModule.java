@@ -18,10 +18,6 @@ import com.fasterxml.jackson.databind.module.SimpleModule;
 
 import javax.xml.datatype.XMLGregorianCalendar;
 
-/**
- * Custom Jackson module for the ObjectMapper, that contains custom (de)serializers for objects of
- * type XMLGregorianCalendar.
- */
 public class XmlGregorianCalendarModule extends SimpleModule {
 
     public XmlGregorianCalendarModule() {

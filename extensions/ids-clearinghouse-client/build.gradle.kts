@@ -11,6 +11,12 @@ val assertj: String by project
 val okHttpVersion: String by project
 val jsonVersion: String by project
 
+repositories {
+    flatDir {
+        dirs("libs/fraunhofer")
+    }
+}
+
 dependencies {
     implementation("${edcGroup}:control-plane-core:${edcVersion}")
     //implementation("${edcGroup}:ids-spi:${edcVersion}")
@@ -18,6 +24,9 @@ dependencies {
     //implementation("${edcGroup}:ids-api-configuration:${edcVersion}")
     //implementation("${edcGroup}:ids-jsonld-serdes:${edcVersion}")
     implementation("${edcGroup}:http-spi:${edcVersion}")
+
+    implementation(":infomodel-java-4.1.3")
+    implementation(":infomodel-util-4.0.4")
 
     implementation("com.squareup.okhttp3:okhttp:${okHttpVersion}")
     implementation("org.json:json:${jsonVersion}")

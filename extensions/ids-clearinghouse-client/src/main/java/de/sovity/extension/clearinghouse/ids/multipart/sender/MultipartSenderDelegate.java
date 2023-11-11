@@ -12,12 +12,12 @@
  *
  */
 
-package org.eclipse.edc.protocol.ids.api.multipart.dispatcher.sender;
+package de.sovity.extension.clearinghouse.ids.multipart.sender;
 
 import de.fraunhofer.iais.eis.DynamicAttributeToken;
 import de.fraunhofer.iais.eis.Message;
-import org.eclipse.edc.protocol.ids.api.multipart.dispatcher.sender.response.IdsMultipartParts;
-import org.eclipse.edc.protocol.ids.api.multipart.dispatcher.sender.response.MultipartResponse;
+import de.sovity.extension.clearinghouse.ids.multipart.sender.response.IdsMultipartParts;
+import de.sovity.extension.clearinghouse.ids.multipart.sender.response.MultipartResponse;
 import org.eclipse.edc.spi.types.domain.message.RemoteMessage;
 
 import java.util.List;

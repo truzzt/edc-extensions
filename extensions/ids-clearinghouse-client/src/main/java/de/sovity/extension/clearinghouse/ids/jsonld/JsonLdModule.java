@@ -12,16 +12,15 @@
  *
  */
 
-package org.eclipse.edc.protocol.ids.jsonld;
+package de.sovity.extension.clearinghouse.ids.jsonld;
 
 import com.fasterxml.jackson.databind.module.SimpleModule;
-import org.eclipse.edc.protocol.ids.jsonld.type.UriDeserializer;
-import org.eclipse.edc.protocol.ids.jsonld.type.UriSerializer;
-import org.eclipse.edc.protocol.ids.jsonld.type.number.LongDeserializer;
-import org.eclipse.edc.protocol.ids.jsonld.type.number.NumSerializer;
+import de.sovity.extension.clearinghouse.ids.jsonld.type.calendar.XmlGregorianCalendarDeserializer;
+import de.sovity.extension.clearinghouse.ids.jsonld.type.calendar.XmlGregorianCalendarSerializer;
+import de.sovity.extension.clearinghouse.ids.jsonld.type.uri.UriDeserializer;
+import de.sovity.extension.clearinghouse.ids.jsonld.type.uri.UriSerializer;
 
-import java.math.BigDecimal;
-import java.math.BigInteger;
+import javax.xml.datatype.XMLGregorianCalendar;
 import java.net.URI;
 
 public class JsonLdModule extends SimpleModule {
@@ -30,13 +29,9 @@ public class JsonLdModule extends SimpleModule {
         super();
 
         addSerializer(URI.class, new UriSerializer());
-
-        addSerializer(BigDecimal.class, new NumSerializer());
-        addSerializer(BigInteger.class, new NumSerializer());
-        addSerializer(Long.class, new NumSerializer());
-        addSerializer(Float.class, new NumSerializer());
-
         addDeserializer(URI.class, new UriDeserializer());
-        addDeserializer(Long.class, new LongDeserializer());
+
+        addSerializer(XMLGregorianCalendar.class, new XmlGregorianCalendarSerializer());
+        addDeserializer(XMLGregorianCalendar.class, new XmlGregorianCalendarDeserializer());
     }
 }

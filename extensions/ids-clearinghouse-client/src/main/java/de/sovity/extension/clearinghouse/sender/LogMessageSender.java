@@ -17,21 +17,21 @@ import de.fraunhofer.iais.eis.DynamicAttributeToken;
 import de.fraunhofer.iais.eis.LogMessageBuilder;
 import de.fraunhofer.iais.eis.Message;
 import de.fraunhofer.iais.eis.MessageProcessedNotificationMessageImpl;
+import de.sovity.extension.clearinghouse.ids.IdsConstants;
 import de.sovity.extension.clearinghouse.sender.message.LogMessage;
 import org.eclipse.edc.connector.contract.spi.types.agreement.ContractAgreement;
 import org.eclipse.edc.connector.transfer.spi.types.TransferProcess;
-import org.eclipse.edc.protocol.ids.api.multipart.dispatcher.sender.MultipartSenderDelegate;
-import org.eclipse.edc.protocol.ids.api.multipart.dispatcher.sender.response.IdsMultipartParts;
-import org.eclipse.edc.protocol.ids.api.multipart.dispatcher.sender.response.MultipartResponse;
-import org.eclipse.edc.protocol.ids.spi.domain.IdsConstants;
-import org.eclipse.edc.protocol.ids.api.multipart.dispatcher.sender.util.CalendarUtil;
+import de.sovity.extension.clearinghouse.ids.multipart.sender.MultipartSenderDelegate;
+import de.sovity.extension.clearinghouse.ids.multipart.sender.response.IdsMultipartParts;
+import de.sovity.extension.clearinghouse.ids.multipart.sender.response.MultipartResponse;
 import org.eclipse.edc.spi.EdcException;
 import org.json.JSONObject;
 
 import java.util.List;
 
-import static org.eclipse.edc.protocol.ids.api.multipart.dispatcher.sender.util.ResponseUtil.parseMultipartStringResponse;
-import static org.eclipse.edc.protocol.ids.jsonld.JsonLd.getObjectMapper;
+import static de.sovity.extension.clearinghouse.ids.jsonld.JsonLd.getObjectMapper;
+import static de.sovity.extension.clearinghouse.ids.multipart.sender.util.ResponseUtil.parseMultipartStringResponse;
+import static de.sovity.extension.clearinghouse.ids.multipart.sender.util.CalendarUtil.gregorianNow;
 
 public class LogMessageSender implements MultipartSenderDelegate<LogMessage, String> {
 
@@ -42,7 +42,7 @@ public class LogMessageSender implements MultipartSenderDelegate<LogMessage, Str
     public Message buildMessageHeader(LogMessage logMessage, DynamicAttributeToken token) {
         return new LogMessageBuilder()
                 ._modelVersion_(IdsConstants.INFORMATION_MODEL_VERSION)
-                ._issued_(CalendarUtil.gregorianNow())
+                ._issued_(gregorianNow())
                 ._securityToken_(token)
                 ._issuerConnector_(logMessage.connectorBaseUrl())
                 ._senderAgent_(logMessage.connectorBaseUrl())

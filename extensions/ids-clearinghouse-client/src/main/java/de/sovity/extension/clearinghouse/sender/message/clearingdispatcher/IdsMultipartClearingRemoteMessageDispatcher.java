@@ -13,8 +13,8 @@
  */
 package de.sovity.extension.clearinghouse.sender.message.clearingdispatcher;
 
-import org.eclipse.edc.protocol.ids.api.multipart.dispatcher.IdsMultipartRemoteMessageDispatcher;
-import org.eclipse.edc.protocol.ids.api.multipart.dispatcher.sender.IdsMultipartSender;
+import de.sovity.extension.clearinghouse.ids.multipart.IdsMultipartRemoteMessageDispatcher;
+import de.sovity.extension.clearinghouse.ids.multipart.sender.IdsMultipartSender;
 
 public class IdsMultipartClearingRemoteMessageDispatcher extends IdsMultipartRemoteMessageDispatcher {
 

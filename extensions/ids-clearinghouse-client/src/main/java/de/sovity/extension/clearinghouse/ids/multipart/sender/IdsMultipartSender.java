@@ -14,19 +14,25 @@
  *
  */
 
-package org.eclipse.edc.protocol.ids.api.multipart.dispatcher.sender;
+package de.sovity.extension.clearinghouse.ids.multipart.sender;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import de.fraunhofer.iais.eis.DynamicAttributeToken;
+import de.fraunhofer.iais.eis.DynamicAttributeTokenBuilder;
 import de.fraunhofer.iais.eis.Message;
+import de.fraunhofer.iais.eis.TokenFormat;
+import de.sovity.extension.clearinghouse.ids.IdsConstants;
 import jakarta.ws.rs.core.MediaType;
 import okhttp3.*;
-import org.eclipse.edc.protocol.ids.api.multipart.dispatcher.sender.response.IdsMultipartParts;
-import org.eclipse.edc.protocol.ids.api.multipart.dispatcher.sender.response.MultipartResponse;
-import org.eclipse.edc.protocol.ids.spi.service.DynamicAttributeTokenService;
+import de.sovity.extension.clearinghouse.ids.multipart.sender.response.IdsMultipartParts;
+import de.sovity.extension.clearinghouse.ids.multipart.sender.response.MultipartResponse;
 import org.eclipse.edc.spi.EdcException;
 import org.eclipse.edc.spi.http.EdcHttpClient;
+import org.eclipse.edc.spi.iam.IdentityService;
+import org.eclipse.edc.spi.iam.TokenParameters;
 import org.eclipse.edc.spi.monitor.Monitor;
 import org.eclipse.edc.spi.response.StatusResult;
+import org.eclipse.edc.spi.result.Result;
 import org.eclipse.edc.spi.types.domain.message.RemoteMessage;
 import org.glassfish.jersey.media.multipart.ContentDisposition;
 
@@ -44,15 +50,15 @@ public class IdsMultipartSender {
 
     private final Monitor monitor;
     private final EdcHttpClient httpClient;
-    private final DynamicAttributeTokenService tokenService;
+    private final IdentityService identityService;
     private final ObjectMapper objectMapper;
 
     public IdsMultipartSender(Monitor monitor, EdcHttpClient httpClient,
-                              DynamicAttributeTokenService tokenService,
+                              IdentityService identityService,
                               ObjectMapper objectMapper) {
         this.monitor = monitor;
         this.httpClient = httpClient;
-        this.tokenService = tokenService;
+        this.identityService = identityService;
         this.objectMapper = objectMapper;
     }
 
@@ -60,7 +66,7 @@ public class IdsMultipartSender {
         var remoteConnectorAddress = request.getCounterPartyAddress();
 
         // Get Dynamic Attribute Token
-        var tokenResult = tokenService.obtainDynamicAttributeToken(remoteConnectorAddress);
+        var tokenResult = obtainDynamicAttributeToken(remoteConnectorAddress);
         if (tokenResult.failed()) {
             String message = "Failed to obtain token: " + String.join(",", tokenResult.getFailureMessages());
             monitor.severe(message);
@@ -78,7 +84,7 @@ public class IdsMultipartSender {
         // Build IDS message header
         Message message;
         try {
-            message = senderDelegate.buildMessageHeader(request, token); // TODO set idsWebhookAddress globally?
+            message = senderDelegate.buildMessageHeader(request, token);
         } catch (Exception e) {
             return failedFuture(e);
         }
@@ -159,6 +165,19 @@ public class IdsMultipartSender {
                 throw new EdcException(format("Received an error from connector (%s): %s %s", requestUrl, r.code(), r.message()));
             }
         });
+    }
+
+    private Result<DynamicAttributeToken> obtainDynamicAttributeToken(String recipientAddress) {
+        var tokenParameters = TokenParameters.Builder.newInstance()
+                .scope(IdsConstants.TOKEN_SCOPE)
+                .audience(recipientAddress)
+                .build();
+        return identityService.obtainClientCredentials(tokenParameters)
+                .map(credentials -> new DynamicAttributeTokenBuilder()
+                        ._tokenFormat_(TokenFormat.JWT)
+                        ._tokenValue_(credentials.getToken())
+                        .build()
+                );
     }
 
     private IdsMultipartParts extractResponseParts(ResponseBody body) throws Exception {

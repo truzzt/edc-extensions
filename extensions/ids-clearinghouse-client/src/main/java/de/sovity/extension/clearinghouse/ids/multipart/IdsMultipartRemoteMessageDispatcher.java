@@ -12,14 +12,13 @@
  *
  */
 
-package org.eclipse.edc.protocol.ids.api.multipart.dispatcher;
+package de.sovity.extension.clearinghouse.ids.multipart;
 
 import org.eclipse.edc.connector.transfer.spi.types.protocol.TransferCompletionMessage;
 import org.eclipse.edc.connector.transfer.spi.types.protocol.TransferStartMessage;
 import org.eclipse.edc.connector.transfer.spi.types.protocol.TransferTerminationMessage;
-import org.eclipse.edc.protocol.ids.api.multipart.dispatcher.sender.IdsMultipartSender;
-import org.eclipse.edc.protocol.ids.api.multipart.dispatcher.sender.MultipartSenderDelegate;
-import org.eclipse.edc.protocol.ids.spi.types.MessageProtocol;
+import de.sovity.extension.clearinghouse.ids.multipart.sender.IdsMultipartSender;
+import de.sovity.extension.clearinghouse.ids.multipart.sender.MultipartSenderDelegate;
 import org.eclipse.edc.spi.EdcException;
 import org.eclipse.edc.spi.message.RemoteMessageDispatcher;
 import org.eclipse.edc.spi.response.StatusResult;
@@ -32,6 +31,8 @@ import java.util.Objects;
 import java.util.concurrent.CompletableFuture;
 
 public class IdsMultipartRemoteMessageDispatcher implements RemoteMessageDispatcher {
+
+    public static final String PROTOCOL = "ids-multipart";
 
     private final IdsMultipartSender multipartSender;
     private final Map<Class<? extends RemoteMessage>, MultipartSenderDelegate<? extends RemoteMessage, ?>> delegates = new HashMap<>();
@@ -51,7 +52,7 @@ public class IdsMultipartRemoteMessageDispatcher implements RemoteMessageDispatc
 
     @Override
     public String protocol() {
-        return MessageProtocol.IDS_MULTIPART;
+        return PROTOCOL;
     }
 
     @Override

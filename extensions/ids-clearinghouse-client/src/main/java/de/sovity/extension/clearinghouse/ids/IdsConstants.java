@@ -13,25 +13,12 @@
  *
  */
 
-package org.eclipse.edc.protocol.ids.spi.domain;
+package de.sovity.extension.clearinghouse.ids;
 
-/**
- * Common IDS values.
- */
 public final class IdsConstants {
 
-    /**
-     * Context information for de/serialization.
-     */
-    public static final String CONTEXT = "https://w3id.org/idsa/contexts/context.jsonld";
-
-    /**
-     * Webhook for IDS multipart messages.
-     */
-    public static final String IDS_WEBHOOK_ADDRESS_PROPERTY = "idsWebhookAddress";
-
-    /**
-     * Version of the used IDS information model library.
-     */
     public static final String INFORMATION_MODEL_VERSION = "4.1.3";
+
+    public static final String TOKEN_SCOPE = "idsc:IDS_CONNECTOR_ATTRIBUTES_ALL";
+
 }

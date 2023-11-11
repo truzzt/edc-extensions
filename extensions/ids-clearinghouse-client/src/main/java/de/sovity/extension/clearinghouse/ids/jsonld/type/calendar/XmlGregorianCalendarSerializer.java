@@ -12,7 +12,7 @@
  *
  */
 
-package org.eclipse.edc.protocol.ids.jsonld.type.calendar;
+package de.sovity.extension.clearinghouse.ids.jsonld.type.calendar;
 
 import com.fasterxml.jackson.core.JsonGenerator;
 import com.fasterxml.jackson.databind.SerializerProvider;

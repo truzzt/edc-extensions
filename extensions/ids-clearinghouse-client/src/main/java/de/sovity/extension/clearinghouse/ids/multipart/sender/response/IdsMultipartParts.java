@@ -12,7 +12,7 @@
  *
  */
 
-package org.eclipse.edc.protocol.ids.api.multipart.dispatcher.sender.response;
+package de.sovity.extension.clearinghouse.ids.multipart.sender.response;
 
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;

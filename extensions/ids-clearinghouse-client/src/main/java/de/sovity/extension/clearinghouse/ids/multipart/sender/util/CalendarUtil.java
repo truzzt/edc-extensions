@@ -13,7 +13,7 @@
  *
  */
 
-package org.eclipse.edc.protocol.ids.api.multipart.dispatcher.sender.util;
+package de.sovity.extension.clearinghouse.ids.multipart.sender.util;
 
 import javax.xml.datatype.DatatypeConfigurationException;
 import javax.xml.datatype.DatatypeFactory;

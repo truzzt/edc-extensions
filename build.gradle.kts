@@ -75,6 +75,9 @@ allprojects {
         maven {
             url = uri("https://oss.sonatype.org/content/repositories/snapshots/")
         }
+        flatDir {
+            dirs("${rootDir}/libs/fraunhofer")
+        }
     }
 }
 

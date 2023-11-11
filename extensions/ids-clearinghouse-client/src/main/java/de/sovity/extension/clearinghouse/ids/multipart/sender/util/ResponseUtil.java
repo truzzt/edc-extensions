@@ -12,12 +12,12 @@
  *
  */
 
-package org.eclipse.edc.protocol.ids.api.multipart.dispatcher.sender.util;
+package de.sovity.extension.clearinghouse.ids.multipart.sender.util;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import de.fraunhofer.iais.eis.Message;
-import org.eclipse.edc.protocol.ids.api.multipart.dispatcher.sender.response.IdsMultipartParts;
-import org.eclipse.edc.protocol.ids.api.multipart.dispatcher.sender.response.MultipartResponse;
+import de.sovity.extension.clearinghouse.ids.multipart.sender.response.IdsMultipartParts;
+import de.sovity.extension.clearinghouse.ids.multipart.sender.response.MultipartResponse;
 
 import java.io.IOException;
 

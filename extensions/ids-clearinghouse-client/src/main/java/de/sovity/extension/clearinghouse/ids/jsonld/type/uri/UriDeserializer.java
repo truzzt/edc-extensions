@@ -12,7 +12,7 @@
  *
  */
 
-package org.eclipse.edc.protocol.ids.jsonld.type;
+package de.sovity.extension.clearinghouse.ids.jsonld.type.uri;
 
 import com.fasterxml.jackson.core.JsonParseException;
 import com.fasterxml.jackson.core.JsonParser;

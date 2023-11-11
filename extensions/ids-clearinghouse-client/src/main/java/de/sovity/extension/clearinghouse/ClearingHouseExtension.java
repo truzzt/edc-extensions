@@ -14,6 +14,7 @@
 package de.sovity.extension.clearinghouse;
 
 import de.fraunhofer.iais.eis.LogMessage;
+import de.sovity.extension.clearinghouse.ids.jsonld.JsonLd;
 import de.sovity.extension.clearinghouse.sender.LogMessageSender;
 import de.sovity.extension.clearinghouse.sender.message.clearingdispatcher.IdsMultipartClearingRemoteMessageDispatcher;
 import de.sovity.extension.clearinghouse.serializer.MultiContextJsonLdSerializer;
@@ -23,9 +24,7 @@ import org.eclipse.edc.connector.contract.spi.event.contractnegotiation.Contract
 import org.eclipse.edc.connector.contract.spi.negotiation.store.ContractNegotiationStore;
 import org.eclipse.edc.connector.transfer.spi.event.TransferProcessTerminated;
 import org.eclipse.edc.connector.transfer.spi.store.TransferProcessStore;
-import org.eclipse.edc.protocol.ids.api.multipart.dispatcher.sender.IdsMultipartSender;
-import org.eclipse.edc.protocol.ids.jsonld.JsonLd;
-import org.eclipse.edc.protocol.ids.spi.service.DynamicAttributeTokenService;
+import de.sovity.extension.clearinghouse.ids.multipart.sender.IdsMultipartSender;
 import org.eclipse.edc.runtime.metamodel.annotation.Inject;
 import org.eclipse.edc.runtime.metamodel.annotation.Setting;
 import org.eclipse.edc.spi.EdcException;
@@ -58,7 +57,6 @@ public class ClearingHouseExtension implements ServiceExtension {
     @Setting
     private static final String CLEARINGHOUSE_CLIENT_EXTENSION_ENABLED = "clearinghouse.client.extension.enabled";
 
-
     @Inject
     private TypeManager typeManager;
 
@@ -79,9 +77,6 @@ public class ClearingHouseExtension implements ServiceExtension {
 
     @Inject
     private EdcHttpClient edcHttpClient;
-
-    @Inject
-    private DynamicAttributeTokenService dynamicAttributeTokenService;
 
     @Inject
     private EventRouter eventRouter;
@@ -162,7 +157,7 @@ public class ClearingHouseExtension implements ServiceExtension {
 
         var logMessageSender = new LogMessageSender();
 
-        var idsMultipartSender = new IdsMultipartSender(monitor, httpClient, dynamicAttributeTokenService, objectMapper);
+        var idsMultipartSender = new IdsMultipartSender(monitor, httpClient, identityService, objectMapper);
         var dispatcher = new IdsMultipartClearingRemoteMessageDispatcher(idsMultipartSender);
         dispatcher.register(logMessageSender);
         dispatcherRegistry.register(dispatcher);

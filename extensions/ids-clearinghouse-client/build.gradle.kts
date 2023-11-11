@@ -11,12 +11,6 @@ val assertj: String by project
 val okHttpVersion: String by project
 val jsonVersion: String by project
 
-repositories {
-    flatDir {
-        dirs("libs/fraunhofer")
-    }
-}
-
 dependencies {
     implementation("${edcGroup}:control-plane-core:${edcVersion}")
     //implementation("${edcGroup}:ids-spi:${edcVersion}")

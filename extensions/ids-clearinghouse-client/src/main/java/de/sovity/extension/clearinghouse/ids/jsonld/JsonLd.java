@@ -12,14 +12,13 @@
  *
  */
 
-package org.eclipse.edc.protocol.ids.jsonld;
+package de.sovity.extension.clearinghouse.ids.jsonld;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
-import org.eclipse.edc.protocol.ids.jsonld.type.calendar.XmlGregorianCalendarModule;
 
 import java.text.SimpleDateFormat;
 
@@ -28,7 +27,6 @@ public final class JsonLd {
     public static ObjectMapper getObjectMapper() {
         var customMapper = new ObjectMapper();
         customMapper.registerModule(new JavaTimeModule());
-        customMapper.registerModule(new XmlGregorianCalendarModule());
         customMapper.registerModule(new JsonLdModule());
 
         customMapper.setDateFormat(new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSXXX"));

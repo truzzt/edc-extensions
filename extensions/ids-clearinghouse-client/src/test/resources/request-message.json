@@ -1,0 +1,24 @@
+{
+  "ids:senderAgent":
+  {
+    "@id": "http://localhost/"
+  },
+  "ids:modelVersion": "4.1.3",
+  "ids:issued":
+  {
+    "@value": "2023-11-15T16:12:13.372-03:00",
+    "@type": "http://www.w3.org/2001/XMLSchema#dateTimeStamp"
+  },
+  "ids:issuerConnector":
+  {
+    "@id": "http://localhost/"
+  },
+  "@id": "https://w3id.org/idsa/autogen/logMessage/bac54277-a416-4f0e-921e-fff18ce951e1",
+  "@context":
+  {
+    "ids": "https://w3id.org/idsa/core/",
+    "idsc": "https://w3id.org/idsa/code/",
+    "cat": "http://w3id.org/mds/data-categories#"
+  },
+  "@type": "ids:LogMessage"
+}

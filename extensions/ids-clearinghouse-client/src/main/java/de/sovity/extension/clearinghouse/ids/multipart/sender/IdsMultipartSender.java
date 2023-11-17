@@ -167,7 +167,7 @@ public class IdsMultipartSender {
         });
     }
 
-    private Result<DynamicAttributeToken> obtainDynamicAttributeToken(String recipientAddress) {
+    protected Result<DynamicAttributeToken> obtainDynamicAttributeToken(String recipientAddress) {
         var tokenParameters = TokenParameters.Builder.newInstance()
                 .scope(IdsConstants.TOKEN_SCOPE)
                 .audience(recipientAddress)
@@ -180,7 +180,7 @@ public class IdsMultipartSender {
                 );
     }
 
-    private IdsMultipartParts extractResponseParts(ResponseBody body) throws Exception {
+    protected IdsMultipartParts extractResponseParts(ResponseBody body) throws Exception {
         InputStream header = null;
         InputStream payload = null;
         try (var multipartReader = new MultipartReader(Objects.requireNonNull(body))) {
@@ -213,7 +213,7 @@ public class IdsMultipartSender {
                 .build();
     }
 
-    private void checkResponseType(MultipartResponse<?> response, MultipartSenderDelegate<? extends RemoteMessage, ?> senderDelegate) {
+    protected void checkResponseType(MultipartResponse<?> response, MultipartSenderDelegate<? extends RemoteMessage, ?> senderDelegate) {
         var type = senderDelegate.getAllowedResponseTypes();
         if (!type.contains(response.getHeader().getClass())) {
             throw new EdcException(String.format("Received %s but expected %s.", response.getHeader().getClass(), type));

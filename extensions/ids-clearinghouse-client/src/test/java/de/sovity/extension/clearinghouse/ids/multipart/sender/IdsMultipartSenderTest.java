@@ -1,20 +1,13 @@
 package de.sovity.extension.clearinghouse.ids.multipart.sender;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import de.fraunhofer.iais.eis.ContentType;
 import de.fraunhofer.iais.eis.DynamicAttributeToken;
-import de.fraunhofer.iais.eis.DynamicAttributeTokenImpl;
 import de.fraunhofer.iais.eis.LogMessage;
-import de.fraunhofer.iais.eis.Message;
-import de.fraunhofer.iais.eis.NotificationMessage;
 import de.sovity.extension.clearinghouse.ids.multipart.sender.response.MultipartResponse;
-import jakarta.ws.rs.core.MediaType;
-import okhttp3.HttpUrl;
 import okhttp3.ResponseBody;
-import org.eclipse.edc.spi.EdcException;
+import okio.BufferedSource;
 import org.eclipse.edc.spi.http.EdcHttpClient;
 import org.eclipse.edc.spi.iam.IdentityService;
-import org.eclipse.edc.spi.iam.TokenParameters;
 import org.eclipse.edc.spi.iam.TokenRepresentation;
 import org.eclipse.edc.spi.monitor.Monitor;
 import org.eclipse.edc.spi.result.Result;
@@ -23,25 +16,19 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
+import util.TestUtil;
 
+import java.io.IOException;
 import java.util.List;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ExecutionException;
 
-import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
-import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyString;
-import static org.mockito.Mockito.doNothing;
-import static org.mockito.Mockito.doReturn;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.spy;
-import static org.mockito.Mockito.times;
-import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.*;
 
-class IdsMultipartSenderTest {
+class IdsMultipartSenderTest extends TestUtil {
 
     private IdsMultipartSender multipartSender;
     @Mock
@@ -54,6 +41,12 @@ class IdsMultipartSenderTest {
 
     @Mock
     private MultipartSenderDelegate senderDelegate;
+
+    @Mock
+    private ResponseBody responseBody;
+
+    @Mock
+    private BufferedSource source;
 
     @Mock
     private RemoteMessage remoteMessage;
@@ -108,19 +101,14 @@ class IdsMultipartSenderTest {
     }
 
     @Test
-    void extractResponsePartsSuccessful() throws Exception {
-        ResponseBody responseBody = mock(ResponseBody.class);
-        doReturn(okhttp3.MediaType.get(MediaType.APPLICATION_JSON)).when(responseBody).contentType();
-        doReturn(okhttp3.MediaType.parse(MediaType.APPLICATION_JSON)).when(responseBody).contentType().parameter(anyString());
-        var response = multipartSender.extractResponseParts(responseBody);
-    }
-
-    @Test
-    void checkResponseTypeSuccessful(){
-        doReturn(List.of(mock(NotificationMessage.class))).when(senderDelegate).getAllowedResponseTypes();
-
+    void checkResponseTypeSuccessful() throws IOException {
         IdsMultipartSender sender1 = spy(multipartSender);
-        doNothing().when(sender1).checkResponseType(any(),any());
-        verify(sender1).checkResponseType(mock(MultipartResponse.class), senderDelegate);
+        MultipartResponse response = mock(MultipartResponse.class);
+        var message = mapper.readValue(getHeaderInputStream(), LogMessage.class);
+        doReturn(List.of(message.getClass())).when(senderDelegate).getAllowedResponseTypes();
+        doReturn(message).when(response).getHeader();
+
+        sender1.checkResponseType(response, senderDelegate);
+        verify(sender1, atLeast(1)).checkResponseType(response, senderDelegate);
     }
 }

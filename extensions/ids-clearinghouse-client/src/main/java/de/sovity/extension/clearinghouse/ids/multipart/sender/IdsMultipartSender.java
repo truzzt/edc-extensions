@@ -213,7 +213,7 @@ public class IdsMultipartSender {
                 .build();
     }
 
-    protected void checkResponseType(MultipartResponse<?> response, MultipartSenderDelegate<? extends RemoteMessage, ?> senderDelegate) {
+    public void checkResponseType(MultipartResponse<?> response, MultipartSenderDelegate<? extends RemoteMessage, ?> senderDelegate) {
         var type = senderDelegate.getAllowedResponseTypes();
         if (!type.contains(response.getHeader().getClass())) {
             throw new EdcException(String.format("Received %s but expected %s.", response.getHeader().getClass(), type));

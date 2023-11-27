@@ -2,13 +2,20 @@ package util;
 
 import org.eclipse.edc.spi.EdcException;
 
+import java.io.ByteArrayInputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 
 public class TestUtil {
+
+    protected static InputStream getHeaderInputStream(){
+        var jsonContents =  getJsonContent("valid-header.json");
+        return new ByteArrayInputStream(jsonContents);
+    }
 
     protected static Path getFile(String path) {
 
@@ -44,7 +51,7 @@ public class TestUtil {
         }
     }
 
-    protected byte[] getJsonContent(String path){
+    protected static byte[] getJsonContent(String path){
         try {
             return Files.readAllBytes(getFile(path));
         } catch (IOException e){

@@ -36,8 +36,11 @@ dependencies {
 
     // Control-plane to Data-plane
     implementation("${edcGroup}:transfer-data-plane:${edcVersion}")
+    implementation("${edcGroup}:transfer-data-plane:${edcVersion}")
+    implementation("${edcGroup}:transfer-pull-http-receiver:${edcVersion}")
     implementation("${edcGroup}:data-plane-selector-core:${edcVersion}")
     implementation("${edcGroup}:data-plane-selector-client:${edcVersion}")
+    implementation("${edcGroup}:data-plane-selector-api:${edcVersion}")
 
     // Data-plane
     implementation("${edcGroup}:data-plane-http:${edcVersion}")

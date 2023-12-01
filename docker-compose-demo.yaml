@@ -1,0 +1,195 @@
+version: "3.8"
+services:
+  provider:
+    image: edc-extensions-connector:latest
+    depends_on:
+      - provider-db
+    environment:
+      WEB_HTTP_PORT: 8181
+      WEB_HTTP_PATH: /api
+      WEB_HTTP_IDS_PORT: 8282
+      WEB_HTTP_IDS_PATH: /api/v1/ids
+      WEB_HTTP_MANAGEMENT_PORT: 8383
+      WEB_HTTP_MANAGEMENT_PATH: /api/v1/management
+      WEB_HTTP_CONTROL_PORT: 8484
+      WEB_HTTP_CONTROL_PATH: /api/v1/control
+      WEB_HTTP_PROTOCOL_PORT: 8585
+      WEB_HTTP_PROTOCOL_PATH: /api/v1/protocol
+      WEB_HTTP_PUBLIC_PORT: 8686
+      WEB_HTTP_PUBLIC_PATH: /api/v1/public
+
+      EDC_PARTICIPANT_ID: "provider"
+      EDC_IDS_ID: "urn:connector:provider"
+      EDC_RECEIVER_HTTP_ENDPOINT: http://host.docker.internal:4000/receiver/urn:connector:provider/callback
+
+      MY_EDC_NAME_KEBAB_CASE: "example-connector"
+      MY_EDC_TITLE: "EDC Connector"
+      MY_EDC_DESCRIPTION: "sovity Community Edition EDC Connector"
+      MY_EDC_CURATOR_URL: "https://example.com"
+      MY_EDC_CURATOR_NAME: "Example GmbH"
+      MY_EDC_MAINTAINER_URL: "https://sovity.de"
+      MY_EDC_MAINTAINER_NAME: "sovity GmbH"
+
+      # Overrides for MDS Images
+      # BROKER_CLIENT_EXTENSION_ENABLED: false
+      CLEARINGHOUSE_CLIENT_EXTENSION_ENABLED: "true"
+
+      # Data Management API Key
+      EDC_API_AUTH_KEY: password
+
+      # Data Space Configuration
+      EDC_OAUTH_CLIENT_ID: F1:7D:DB:23:B1:C4:50:3D:16:57:54:7E:A6:96:8B:03:BB:AF:7B:EE:5B:57:F7:61:16:B2:B0:13:49:59:70:34:45:44:90:51:24:4A:1C:09
+      EDC_OAUTH_TOKEN_URL: http://host.docker.internal:4567/token
+      EDC_OAUTH_PROVIDER_JWKS_URL: http://host.docker.internal:4567/jwks.json
+      #EDC_BROKER_BASE_URL: https://broker.test.mobility-dataspace.eu
+      EDC_CLEARINGHOUSE_LOG_URL: http://host.docker.internal:7171/api/messages/log
+      EDC_KEYSTORE: /config/connector-1.jks
+      EDC_KEYSTORE_PASSWORD: password
+      EDC_OAUTH_CERTIFICATE_ALIAS: 1
+      EDC_OAUTH_PRIVATE_KEY_ALIAS: 1
+
+      MY_EDC_PROTOCOL: "http://"
+      MY_EDC_FQDN: "edc"
+      MY_EDC_IDS_BASE_URL: "http://provider:8282"
+
+      MY_EDC_JDBC_URL: jdbc:postgresql://provider-db:5432/edc
+      MY_EDC_JDBC_USER: edc
+      MY_EDC_JDBC_PASSWORD: password
+
+      EDC_WEB_REST_CORS_ENABLED: 'true'
+      EDC_WEB_REST_CORS_HEADERS: 'origin,content-type,accept,authorization,x-api-key'
+      EDC_WEB_REST_CORS_ORIGINS: '*'
+    ports:
+      - '8181:8181'
+      - '8282:8282'
+      - '8383:8383'
+      - '8484:8484'
+      - '8585:8585'
+      - '8686:8686'
+      - '8989:5005'
+    volumes:
+      - ./config:/config
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+
+  consumer:
+    image: edc-extensions-connector:latest
+    depends_on:
+      - consumer-db
+    environment:
+      WEB_HTTP_PORT: 9191
+      WEB_HTTP_PATH: /api
+      WEB_HTTP_IDS_PORT: 9292
+      WEB_HTTP_IDS_PATH: /api/v1/ids
+      WEB_HTTP_MANAGEMENT_PORT: 9393
+      WEB_HTTP_MANAGEMENT_PATH: /api/v1/management
+      WEB_HTTP_CONTROL_PORT: 9494
+      WEB_HTTP_CONTROL_PATH: /api/v1/control
+      WEB_HTTP_PROTOCOL_PORT: 9595
+      WEB_HTTP_PROTOCOL_PATH: /api/v1/protocol
+      WEB_HTTP_PUBLIC_PORT: 9696
+      WEB_HTTP_PUBLIC_PATH: /api/v1/public
+
+      EDC_IDS_ID: "urn:connector:consumer"
+      EDC_PARTICIPANT_ID: "consumer"
+      EDC_RECEIVER_HTTP_ENDPOINT: http://host.docker.internal:4000/receiver/urn:connector:consumer/callback
+
+      MY_EDC_NAME_KEBAB_CASE: "example-connector"
+      MY_EDC_TITLE: "EDC Connector"
+      MY_EDC_DESCRIPTION: "sovity Community Edition EDC Connector"
+      MY_EDC_CURATOR_URL: "https://example.com"
+      MY_EDC_CURATOR_NAME: "Example GmbH"
+      MY_EDC_MAINTAINER_URL: "https://sovity.de"
+      MY_EDC_MAINTAINER_NAME: "sovity GmbH"
+
+      # Overrides for MDS Images
+      # BROKER_CLIENT_EXTENSION_ENABLED: false
+      CLEARINGHOUSE_CLIENT_EXTENSION_ENABLED: "true"
+
+      # Data Management API Key
+      EDC_API_AUTH_KEY: password
+
+      # Data Space Configuration
+      EDC_OAUTH_CLIENT_ID: 6A:4E:59:42:40:7C:38:DD:8F:D9:50:FA:2E:B3:42:02:DC:AF:16:8B:5B:57:F7:61:16:B2:B0:13:49:59:70:34:45:44:90:51:24:4A:1C:09
+      EDC_OAUTH_TOKEN_URL: http://host.docker.internal:4567/token
+      EDC_OAUTH_PROVIDER_JWKS_URL: http://host.docker.internal:4567/jwks.json
+      #EDC_BROKER_BASE_URL: https://broker.test.mobility-dataspace.eu
+      EDC_CLEARINGHOUSE_LOG_URL: http://host.docker.internal:7171/api/messages/log
+      EDC_KEYSTORE: /config/connector-2.jks
+      EDC_KEYSTORE_PASSWORD: password
+      EDC_OAUTH_CERTIFICATE_ALIAS: 1
+      EDC_OAUTH_PRIVATE_KEY_ALIAS: 1
+
+      MY_EDC_PROTOCOL: "http://"
+      MY_EDC_FQDN: "consumer"
+      MY_EDC_IDS_BASE_URL: "http://consumer:9292"
+
+      MY_EDC_JDBC_URL: jdbc:postgresql://consumer-db:5432/edc
+      MY_EDC_JDBC_USER: edc
+      MY_EDC_JDBC_PASSWORD: password
+
+      EDC_WEB_REST_CORS_ENABLED: 'true'
+      EDC_WEB_REST_CORS_HEADERS: 'origin,content-type,accept,authorization,x-api-key'
+      EDC_WEB_REST_CORS_ORIGINS: '*'
+    ports:
+      - '9191:9191'
+      - '9292:9292'
+      - '9393:9393'
+      - '9494:9494'
+      - '9595:9595'
+      - '9696:9696'
+      - '9999:5005'
+    volumes:
+      - ./config:/config
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+
+  consumer-db:
+    image: docker.io/bitnami/postgresql:11
+    environment:
+      POSTGRESQL_USERNAME: edc
+      POSTGRESQL_PASSWORD: password
+      POSTGRESQL_DATABASE: edc
+    ports:
+      - '9432:5432'
+
+  provider-db:
+    image: docker.io/bitnami/postgresql:11
+    environment:
+      POSTGRESQL_USERNAME: edc
+      POSTGRESQL_PASSWORD: password
+      POSTGRESQL_DATABASE: edc
+    ports:
+      - '8432:5432'
+
+  provider-ui:
+    image: ghcr.io/sovity/edc-ui:0.0.1-milestone-8-sovity14
+    depends_on:
+      - consumer
+      - provider
+    ports:
+      - '8080:80'
+    environment:
+      - EDC_UI_ACTIVE_PROFILE=sovity-open-source
+      - EDC_UI_DATA_MANAGEMENT_API_URL=http://localhost:8383/api/v1/management
+      - EDC_UI_DATA_MANAGEMENT_API_KEY=password
+      - EDC_UI_CATALOG_URLS=http://consumer:9292/api/v1/ids/data
+      - EDC_UI_CONNECTOR_ENDPOINT=http://localhost:8282/api/v1/ids/data
+      - EDC_UI_DAPS_OAUTH_TOKEN_URL=http://localhost:4567/token
+      - EDC_UI_DAPS_OAUTH_JWKS_URL=http://localhost:4567/jwks.json
+
+  consumer-ui:
+    image: ghcr.io/sovity/edc-ui:0.0.1-milestone-8-sovity14
+    depends_on:
+      - consumer
+      - provider
+    ports:
+      - '9090:80'
+    environment:
+      - EDC_UI_ACTIVE_PROFILE=sovity-open-source
+      - EDC_UI_DATA_MANAGEMENT_API_URL=http://localhost:9393/api/v1/management
+      - EDC_UI_DATA_MANAGEMENT_API_KEY=password
+      - EDC_UI_CATALOG_URLS=http://provider:8282/api/v1/ids/data
+      - EDC_UI_CONNECTOR_ENDPOINT=http://localhost:9292/api/v1/ids/data
+      - EDC_UI_DAPS_OAUTH_TOKEN_URL=http://localhost:4567/token
+      - EDC_UI_DAPS_OAUTH_JWKS_URL=http://localhost:4567/jwks.json

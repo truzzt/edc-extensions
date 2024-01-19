@@ -26,6 +26,9 @@ please see [changelog_updates.md](docs/dev/changelog_updates.md).
 - Add e2e test for double encoding of query parameters
 
 ### Deployment Migration Notes
+- new logging-house-client env for mds:
+  - ```CLEARINGHOUSE_CLIENT_EXTENSION_ENABLED:``` "true"
+  - ```EDC_CLEARINGHOUSE_LOG_URL:``` https://example.com
 
 - EDC UI:
   - New **optional** environment variable: `EDC_UI_MANAGEMENT_API_URL_SHOWN_IN_DASHBOARD` as override for shown Management API URL on the dashboard

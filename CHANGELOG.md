@@ -18,6 +18,7 @@ please see [changelog_updates.md](docs/dev/changelog_updates.md).
 - Add new MDS fields and migrate existing MDS asset keys to mobilityDCAT-AP
 
 #### Patch Changes
+- DspCatalogService: Contract Offer IDs are now stable
 
 ### Deployment Migration Notes
 - new logging-house-client env for mds:

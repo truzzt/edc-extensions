@@ -18,6 +18,25 @@ please see [changelog_updates.md](docs/dev/changelog_updates.md).
 - Add new MDS fields and migrate existing MDS asset keys to mobilityDCAT-AP
 
 #### Patch Changes
+
+### Deployment Migration Notes
+
+#### Compatible Versions
+
+
+## [7.2.1] - 2024-02-21
+
+### Overview
+
+Bugfixes
+
+### EDC UI
+
+https://github.com/sovity/edc-ui/releases/tag/v2.4.0
+
+### EDC Extensions
+
+#### Patch Changes
 - DspCatalogService: Contract Offer IDs are now stable
 - Fixed some requests' timeouts by removing the data-plane-instance-store-sql Extension
 
@@ -26,7 +45,14 @@ please see [changelog_updates.md](docs/dev/changelog_updates.md).
   - ```CLEARINGHOUSE_CLIENT_EXTENSION_ENABLED:``` "true"
   - ```EDC_CLEARINGHOUSE_LOG_URL:``` https://example.com
 
+_No special deployment migration steps required_
+
 #### Compatible Versions
+- Connector Backend Docker Images:
+    - Dev EDC: `ghcr.io/sovity/edc-dev:7.2.1`
+    - sovity EDC CE: `ghcr.io/sovity/edc-ce:7.2.1`
+    - MDS EDC CE: `ghcr.io/sovity/edc-ce-mds:7.2.1`
+- Connector UI Docker Image: `ghcr.io/sovity/edc-ui:2.4.0`
 
 ## [7.2.0] - 2024-02-14
 

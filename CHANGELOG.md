@@ -17,6 +17,8 @@ please see [changelog_updates.md](docs/dev/changelog_updates.md).
 - Logginghouse-Client: Add logging-house-client extension 0.1.0
 - Add new MDS fields and migrate existing MDS asset keys to mobilityDCAT-AP
 
+- UIAsset: Replaced unsafe additional and private properties with safer alternative fields `customJsonAsString` (**not** affected by Json LD manipulation) and `customJsonLdAsString` (affected by Json LD manipulation), along with their private counterparts.
+
 #### Patch Changes
 
 ### Deployment Migration Notes

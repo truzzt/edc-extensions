@@ -14,7 +14,7 @@ please see [changelog_updates.md](docs/dev/changelog_updates.md).
 #### Major Changes
 
 #### Minor Changes
-- Logginghouse-Client: Add logging-house-client extension 0.1.0
+- Logginghouse-Client: Add logging-house-client extension 0.2.9
 - Add new MDS fields and migrate existing MDS asset keys to mobilityDCAT-AP
 
 - UIAsset: Replaced unsafe additional and private properties with safer alternative fields `customJsonAsString` (**not** affected by Json LD manipulation) and `customJsonLdAsString` (affected by Json LD manipulation), along with their private counterparts.
@@ -36,6 +36,9 @@ please see [changelog_updates.md](docs/dev/changelog_updates.md).
     - `REMOTE_DEBUG = false`
     - `REMOTE_DEBUG_SUSPEND = false`
     - `REMOTE_DEBUG_BIND = 127.0.0.1:5005`
+- new logging-house-client env for mds:
+  - ```EDC_LOGGINGHOUSE_EXTENSION_ENABLED:``` "true"
+  - ```EDC_LOGGINGHOUSE_EXTENSION_URL:``` https://example.com
 
 #### Compatible Versions
 
@@ -86,10 +89,6 @@ https://github.com/sovity/edc-ui/releases/tag/v2.4.0
 - Fixed some requests' timeouts by removing the data-plane-instance-store-sql Extension
 
 ### Deployment Migration Notes
-- new logging-house-client env for mds:
-  - ```CLEARINGHOUSE_CLIENT_EXTENSION_ENABLED:``` "true"
-  - ```EDC_CLEARINGHOUSE_LOG_URL:``` https://example.com
-
 _No special deployment migration steps required_
 
 #### Compatible Versions
